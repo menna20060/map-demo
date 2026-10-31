@@ -1,0 +1,560 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+
+:root {
+  --green: #3f5f46;
+  --green-soft: #eef3ee;
+  --ink: #1f2a22;
+  --muted: #6b776e;
+  --radius: 16px;
+  --shadow: 0 8px 28px rgba(20, 40, 25, 0.18);
+  --ease: cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Cairo', system-ui, sans-serif;
+  color: var(--ink);
+}
+
+.map-wrap {
+  position: fixed;
+  inset: 0;
+}
+
+.leaflet-container {
+  font-family: inherit;
+  background: #e8eeef;
+}
+
+/* ---------- الدبوس ---------- */
+.pin {
+  background: none;
+  border: none;
+}
+
+.pin-inner {
+  position: relative;
+  width: 36px;
+  height: 46px;
+  animation: drop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.pin-inner svg {
+  display: block;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.35));
+  transition: transform 0.25s var(--ease);
+  transform-origin: 50% 100%;
+}
+
+.pin:hover .pin-inner svg {
+  transform: translateY(-5px) scale(1.12);
+}
+
+.pulse {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  opacity: 0.5;
+  transform: translateX(-50%) scale(0.3);
+  animation: pulse 1.8s ease-out infinite;
+}
+
+@keyframes drop {
+  from { opacity: 0; transform: translateY(-40px) scale(0.6); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes pulse {
+  from { opacity: 0.55; transform: translateX(-50%) scale(0.3); }
+  to   { opacity: 0;    transform: translateX(-50%) scale(2.2); }
+}
+
+/* ---------- نافذة الـ popup ---------- */
+.farm-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transform-origin: 50% 115%;
+  animation: popIn 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.25) both;
+}
+
+.farm-popup .leaflet-popup-content {
+  margin: 0;
+}
+
+.farm-popup .leaflet-popup-tip {
+  box-shadow: none;
+}
+
+.farm-popup a.leaflet-popup-close-button {
+  right: auto;
+  left: 6px;
+  top: 6px;
+  width: 26px;
+  height: 26px;
+  font-size: 20px;
+  line-height: 24px;
+  border-radius: 50%;
+  color: var(--muted);
+  transition: background 0.2s;
+}
+
+.farm-popup a.leaflet-popup-close-button:hover {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.7); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.popup {
+  direction: rtl;
+  text-align: right;
+  min-width: 230px;
+  padding: 14px 16px 16px;
+}
+
+.popup-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-left: 22px;
+}
+
+.popup h3 {
+  margin: 0;
+  font-size: 17px;
+  color: var(--green);
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.popup dl {
+  margin: 12px 0 0;
+  display: grid;
+  gap: 8px;
+}
+
+.popup dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 8px;
+  border-top: 1px solid #edf0ed;
+}
+
+.popup dt {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.popup dd {
+  margin: 0;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.dot {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ---------- أزرار التقريب ---------- */
+.leaflet-bar {
+  border: none;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.leaflet-bar a {
+  width: 38px;
+  height: 38px;
+  line-height: 38px;
+  color: var(--green);
+  transition: background 0.2s;
+}
+
+.leaflet-bar a:hover {
+  background: var(--green-soft);
+}
+
+/* ---------- تبديل الخريطة ---------- */
+.basemap {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 1100;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  direction: rtl;
+}
+
+.basemap button {
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.25s var(--ease), color 0.25s;
+}
+
+.basemap button.on {
+  background: var(--green);
+  color: #fff;
+}
+
+.basemap button:not(.on):hover {
+  background: var(--green-soft);
+}
+
+/* ---------- اللوحة الجانبية ---------- */
+.panel {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1100;
+  width: 330px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  box-sizing: border-box;
+  direction: rtl;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  transition: transform 0.45s var(--ease), opacity 0.35s;
+}
+
+.panel.closed {
+  transform: translateX(120%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.panel-head h1 {
+  margin: 0;
+  font-size: 22px;
+  color: var(--green);
+}
+
+.panel-head p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.icon-btn,
+.toggle {
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.icon-btn:hover {
+  background: #dfe9df;
+}
+
+.toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1100;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  font-size: 18px;
+  box-shadow: var(--shadow);
+}
+
+.toggle:hover {
+  transform: scale(1.08);
+}
+
+.toggle.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.6);
+}
+
+/* ---------- الفلاتر ---------- */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #dfe6df;
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+}
+
+.chip b {
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.chip:hover {
+  border-color: var(--green);
+}
+
+.chip.on {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+.chip.on b {
+  color: #fff;
+}
+
+/* ---------- القائمة ---------- */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: #fff;
+  font: inherit;
+  text-align: right;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s, border-color 0.25s, background 0.25s;
+}
+
+.card:hover {
+  transform: translateX(-4px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.card.active {
+  border-color: var(--green);
+  background: var(--green-soft);
+}
+
+.card-text {
+  flex: 1;
+  display: grid;
+}
+
+.card-text strong {
+  font-size: 14px;
+}
+
+.card-text small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.card-area {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.reset {
+  border: none;
+  background: var(--green);
+  color: #fff;
+  font: inherit;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: filter 0.2s, transform 0.2s;
+}
+
+.reset:hover {
+  filter: brightness(1.12);
+}
+
+.reset:active {
+  transform: scale(0.98);
+}
+
+/* ---------- الموبايل: اللوحة تبقى في الأسفل ---------- */
+@media (max-width: 700px) {
+  .panel {
+    top: auto;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+    height: 46%;
+  }
+
+  .panel.closed {
+    transform: translateY(120%);
+  }
+
+  .basemap {
+    top: 12px;
+    left: 12px;
+  }
+
+  .toggle {
+    top: auto;
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .leaflet-bottom.leaflet-right {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- الطبقات (heatmap والتجميع) ---------- */
+.layers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.layer-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px dashed #c3cfc4;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.25s var(--ease);
+}
+
+.layer-pill input {
+  display: none;
+}
+
+.layer-pill:hover {
+  border-color: var(--green);
+}
+
+.layer-pill.on {
+  border: 1px solid var(--green);
+  background: var(--green-soft);
+  color: var(--green);
+  font-weight: 600;
+}
+
+.hint {
+  flex-basis: 100%;
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ---------- نقط الاكتشاف والتجميع ---------- */
+.dot-marker span {
+  display: block;
+  width: 14px;
+  height: 14px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s var(--ease);
+}
+
+.dot-marker:hover span {
+  transform: scale(1.4);
+}
+
+.cluster {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  background: radial-gradient(circle at 30% 30%, #6a9873, #3f5f46);
+  box-shadow: 0 4px 12px rgba(20, 40, 25, 0.4);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  transition: filter 0.2s;
+}
+
+.cluster:hover {
+  filter: brightness(1.15);
+}
+
+.cluster span {
+  line-height: 1;
+}
